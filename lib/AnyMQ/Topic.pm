@@ -37,9 +37,11 @@ sub BUILD {
 sub install_reaper {
     my $self = shift;
 
+    my $weakself = $self;
+    Scalar::Util::weaken($weakself);
     $self->_listener_reaper(
         AnyEvent->timer(interval => $self->reaper_interval,
-                        cb => sub { $self->reap_destroyed_listeners })
+                        cb => sub { $weakself->reap_destroyed_listeners })
     );
 }
 
